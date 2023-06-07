@@ -1,0 +1,19 @@
+{% extends 'account/base.html' %}
+
+{% load account %}
+
+
+{% block content %}
+    <div class="text-center">
+        <h2>Home</h2>
+        <p>Hello {{ user.first_name }}!</p>
+        <p>Your Username : {{ user.username }}</p>
+        {% for i in sid %}
+            {{i.user}}
+            {{i.agi}}
+            {{i.str}}
+        {% endfor %}
+
+        {% comment %} <a class="btn btn-dark" href="{% url 'socialaccount_connections' %}">Settings</a> {% endcomment %}
+    </div>
+{% endblock %}

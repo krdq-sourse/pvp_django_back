@@ -1,0 +1,89 @@
+{% load static %}
+{% load humanize %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/main.css' %}" id="theme-link">
+    <link rel="shortcut icon" href="{% static 'images/logo.png' %}" type="image/png">
+    <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=El+Messiri:wght@600&family=Open+Sans:wght@300;400&display=swap" rel="stylesheet">
+    <script type="text/javascript" src="{% static 'js/jquery-3.6.1.min.js' %}"></script>
+    <script src="{% static 'js/app.js' %}" defer></script>
+    <title>Boss Survival Adventure</title>
+</head>
+<body>
+    <div class="container">
+        {% include "header.html" %}
+        {% if user.is_staff %}
+            <div class="dev-container">
+                <div class="dev-content">
+                    {% if info %}
+                        <div class="user">
+                            <div>
+                                <img class="ava-dev" src={{extra.avatar}} alt="Avatar">
+                                {{extra.personaname}}
+                            </div>
+                            <div>
+                                <span>Steam ID</span>
+                                <span>{{info.steamID}}</span>
+                            </div>
+                            <div>
+                                <span>Монет:</span>
+                                <span>{{info.coins}}</span>
+                            </div>
+                            <div>
+                                <span>Тотал:</span>
+                                <span>{{info.total_coins}}</span>
+                            </div>
+                             <div>
+                                <span>РП</span>
+                                <span>{{info.rp}}</span>
+                            </div>                           
+                        </div>
+                    {% endif %}    
+                    <form class="player-id" name="dev" action="{% url 'dev' %}" method="post">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        {% if form %}
+                            <button class="btn-dev" type="submit">OK</button>
+                        {% endif %}
+                    </form>
+
+                    <form class="donate" name="donate" action="{% url 'dev' %}" method="post">
+                        {% csrf_token %}
+                        {{ donate_form.as_p }}
+                        {% if donate_form %}  
+                            <button class="btn-dev" type="submit">Donate</button>
+                        {% endif %}
+                    </form>
+                </div>
+                {% if not history %}
+                    <p>История не найдена!</p>
+                {% else %}   
+                    <div class="tbl">
+                        <table>
+                            <tr>
+                                <th>Steam ID</th>
+                                <th>Сумма</th>
+                                <th>Предмет</th>
+                                <th>Дата</th>
+                            </tr>
+                            {% for i in history %}
+                            <tr class='table' {% if i.coins < 0 %} style="background-color: red" {% else %}  style="background-color: green" {% endif %} >
+                                <td>{{i.steamID}}</td>
+                                <td>{{i.coins}}</td>
+                                <td>{{i.item}}</td>
+                                <td>{{i.date}}</td>
+                            </tr>
+                            {% endfor%}
+                        </table>
+                    </div>     
+                {% endif %}
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>  

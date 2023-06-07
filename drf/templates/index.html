@@ -1,0 +1,126 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="{% static 'css/main.css' %}" id="theme-link">
+  <link rel="shortcut icon" href="{% static 'images/logo.png' %}" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=El+Messiri:wght@600&family=Open+Sans:wght@300;400&display=swap" rel="stylesheet">
+  <script type="text/javascript" src="{% static 'js/jquery-3.6.1.min.js' %}"></script>
+  <script src="{% static 'js/app.js' %}" defer></script>
+  <title>Boss Survival Adventure</title>
+</head>
+
+<body>
+  <div class="container">
+
+    {% include "header.html" %}
+
+		<section class="gallery">  
+			<div class="frame">
+				<div class="frame__content">
+					<h2>Boss Survival Adventure</h2>
+				</div>
+			</div>
+
+			<div class="frame"></div>
+
+			<div class="frame">
+				<div class="frame__content">
+          <img class="frame-media frame-media_left_image" src="{% static 'images/first.jpeg' %}" alt="">
+				</div>
+			</div>
+
+			<div class="frame frame_bg">
+				<div class="frame__content">
+					<video class="frame-media frame-media_right" src="{% static 'video/2.mp4' %}" autoplay loop muted></video>
+				</div>
+			</div>
+
+      <div class="frame"></div>
+			<div class="frame">
+				<div class="frame__content text-right">
+					<h3 id='1-frame-title'>13+ unique locations</h3>
+          			<p id='1-frame-description'>Each location offers a unique experience filled with mystery and adventure</p>
+				</div>
+			</div>
+			<div class="frame frame_bg">
+				<div class="frame__content">
+          		<img class="frame-media frame-media_left_image" src="{% static 'images/2.png' %}" alt="">
+				</div>
+			</div>
+
+      <div class="frame"></div>
+			<div class="frame">
+				<div class="frame__content text-left">
+					<h3 id='2-frame-title'>20+ unique bosses</h3>
+          			<p id='2-frame-description'>All bosses and creeps have their own unique characteristics and require a special strategy to defeat</p>
+				</div>
+			</div>
+			<div class="frame frame_bg">
+				<div class="frame__content">
+					<img class="frame-media frame-media_right img" src="{% static 'images/3.png' %}" alt="">
+				</div>
+			</div>
+
+      <div class="frame"></div>
+			<div class="frame">
+				<div class="frame__content text-right">
+					<h3 id='3-frame-title'>unique heroes</h3>
+          			<p id='3-frame-description'>Each hero has his own skills and talents, which makes the game more interesting and varied</p>
+				</div>
+			</div>
+			<div class="frame frame_bg">
+				<div class="frame__content">
+					<video class="frame-media frame-media_left" src="{% static 'video/3.mp4' %}" autoplay loop muted></video>
+				</div>
+			</div>
+
+      <div class="frame"></div>
+			<div class="frame">
+				<div class="frame__content text-left">
+					<h3 id='4-frame-title'>100+ unique items</h3>
+          			<p id='4-frame-description'>The ability to assemble a unique build set of the hero</p>
+				</div>
+			</div>
+			<div class="frame frame_bg">
+				<div class="frame__content">
+         		 <img class="frame-media frame-media_right_image" src="{% static 'images/4.png' %}" alt="">
+				</div>
+			</div>
+
+      <div class="frame"></div>
+			<div class="frame">
+				<div class="frame__content text-right">
+					<h3 id='5-frame-title'>RPG system</h3>
+					<p id='5-frame-description'>Playing you get experience that allows you to develop your account</p>
+				</div>
+			</div>
+			<div class="frame">
+				<div class="frame__content">
+         		 <img class="frame-media frame-media_left_image hor" src="{% static 'images/account.png' %}" alt="">
+				</div>
+			</div>
+
+      <div class="frame"></div>
+      {% comment %} <div class="frame"></div> {% endcomment %}
+
+			<div class="frame">
+				<div class="frame__content">© xDes</div>
+			</div>
+		</section>
+
+    {% include "footer.html" %}
+
+	</div>
+</body>
+
+</html>

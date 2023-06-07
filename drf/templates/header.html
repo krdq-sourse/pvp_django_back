@@ -1,0 +1,48 @@
+{% load static %}
+
+<div class="nav">
+    <a href="/"> <img class="logo" src="{% static 'images/logo.png' %}" alt=""></a> 
+   
+    <div class="nav-content">
+      <a href="/"><img class="btn" src="{% static 'images/home.png' %}" alt=""></a> 
+      <a href="/payments/"><img class="btn" src="{% static 'images/shop.png' %}" alt=""></a> 
+      <div class="fab">
+      <img class="btn language" src="{% static 'images/language.png' %}" alt="">
+        <ul class="fab-buttons">
+          <li class="fab-buttons__item">
+              <img id="en" class="fab-buttons__link" src="{% static 'images/united-kingdom.png' %}" alt="">
+          </li>
+          <li class="fab-buttons__item">
+            <img id="ua" class="fab-buttons__link" src="{% static 'images/ukraine.png' %}" alt="">
+          </li>
+          <li class="fab-buttons__item">
+            <img id="ch" class="fab-buttons__link" src="{% static 'images/china.png' %}" alt="">
+          </li>
+          <li class="fab-buttons__item">
+            <img id="ru" class="fab-buttons__link" src="{% static 'images/russia.png' %}" alt="">
+          </li>
+        </ul>
+      </div>
+
+
+      {% if user.is_staff %}
+        <a class="btn" href="/dev/">Donate</a>
+      {% endif %}
+        {% if user.is_authenticated %}
+        <form method="post" action="{% url 'account_logout' %}">
+          {% csrf_token %}
+          {% if redirect_field_value %}
+          <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+          {% endif %}
+          <button class="btn" type="submit"><img class="btn" src="{% static 'images/logout.png' %}" alt=""></button>
+        </form>
+        <form action="/profile/" id='profile'>
+          <button class="btn" type="submit"><img class="btn" src="{% static 'images/profile.png' %}" alt=""></button>
+        </form>
+        {% else %}
+        <form action="/accounts/steam/login/">
+          <button class="btn" type="submit"><img class="btn" src="{% static 'images/login.png' %}" alt=""></button>
+        </form>
+        {% endif %}
+    </div>
+  </div>    

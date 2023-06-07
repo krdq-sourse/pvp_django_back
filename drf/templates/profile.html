@@ -1,0 +1,72 @@
+{% load static %}
+{% load humanize %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/main.css' %}" id="theme-link">
+    <link rel="shortcut icon" href="{% static 'images/logo.png' %}" type="image/png">
+    <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=El+Messiri:wght@600&family=Open+Sans:wght@300;400&display=swap" rel="stylesheet">
+    <script type="text/javascript" src="{% static 'js/jquery-3.6.1.min.js' %}"></script>
+    <script src="{% static 'js/app.js' %}" defer></script>
+    <title>Boss Survival Adventure</title>
+</head>
+<body>
+  <div class="container">
+    {% include "header.html" %}
+
+    <div class="content_profile">
+      <div class="container_profile">
+        {% if not profile %}
+        <pid='id-player-description'>Для отображения статистики необходимо сыграть хотя бы в 1 игру!</p>
+        {% else %}
+          <div class="left_side">
+            <img class="ava" src={{extra.avatarfull}} alt="Avatar">
+            <span>{{extra.personaname}}</span>
+              <p>id: {{profile.user}}</p> 
+              <p id='id-player-level'>Уровень: {{profile.level}}</p> 
+              <p id='id-player-exp'>Опыт: {{profile.player_exp}}</p> 
+              <p id='id-player-rating'>Рейтинг: {{statistic.rating}}</p> 
+              <p id='id-player-rating'>Тотал донат: {{user_user.total_coins}}</p> 
+          </div>
+          <div class="right_side">
+            <div class="rigth-top">
+              <div class="grafic">
+              <div class="pie no-round back" style="--p:100;--c:grey;"></div>
+              <div class="pie animate no-round" style="--p:{{winrate}};--c:orange;"> {{winrate}}%</div>
+              
+              <p id='id-player-games'>Игр: {{statistic.games|intcomma}}</p>
+              <p id='id-player-wins'>Побед: {{statistic.win_games|intcomma}}</p>
+            </div>
+
+            <div class="grafic">
+              <div class="pie no-round back" style="--p:100;--c:grey;"></div>
+              <div class="pie animate no-round" style="--p:{{game_rate}};--c:orange;"> {{game_rate}}%</div>
+              <p id='id-player-simple'>Обычных игр: {{statistic.simple_game|intcomma}}</p>
+              <p id='id-player-ability'>Абили мод: {{statistic.ability_game|intcomma}}</p>
+            </div>
+
+            <div class="grafic">
+              <div class="pie no-round back" style="--p:100;--c:grey;"></div>
+              <div class="pie animate no-round" style="--p:{{damage_rate}};--c:orange;"> {{damage_rate}}%</div>
+              <p id='id-player-dd'>Нанес урон: {{statistic.damage_deal|intcomma}}</p>
+              <p id='id-player-dt'>Получил урон: {{statistic.damage_take|intcomma}}</p>
+            </div> 
+          </div>
+          
+            <div class="other">
+              <p id='id-player-creeps'>Убил крипов: {{statistic.creeps|intcomma}}</p>
+              <p id='id-player-boss'>Убил боссов: {{statistic.bosses|intcomma}}</p>
+              <p id='id-player-golden'>Убил золотых монстров: {{statistic.golden_creeps|intcomma}}</p>
+              <p id='id-player-min'>Минут в игре: {{statistic.min_time|intcomma}}</p>
+            </div>    
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</body>
+</html>
