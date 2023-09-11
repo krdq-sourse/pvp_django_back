@@ -16,6 +16,7 @@ import json
 from datetime import datetime
 from django.http import HttpResponse
 import hashlib
+from functools import wraps
 
 
 logger = logging.getLogger(__name__)
@@ -25,6 +26,16 @@ KEY_TELEGRAM = ''
 SHOP_ID = ''
 SHOP_WORD = ''
 MY_ID = 7
+
+
+def validate_key(view_func):
+    @wraps(view_func)
+    def _wrapped_view(instance, request, *args, **kwargs):
+        key = request.GET.get('key')
+        if key != KEY_VALID:
+            return Response({"status": "False"})
+        return view_func(instance, request, *args, **kwargs)
+    return _wrapped_view
 
 class Test(APIView):
     def get(self, request):
@@ -472,59 +483,66 @@ class BuyAccountExpView(APIView):
 class SetStatisticView(APIView):
     renderer_classes = (JSONRenderer, )
 
+    @api_view(['POST'])
+    @validate_key
     def post(self, request):
-        key = request.GET.get('key')
         logging.basicConfig(filename='server.log', level=logging.INFO)
-        logger.info('Received key set statistic: %s', key)
-        if key != KEY_VALID:
-            return Response({"status": "False"})
-        try:
-            arr = json.loads(request.POST.get('arr'))
-        except (json.JSONDecodeError, TypeError):
+        logger.info('Received key set statistic: %s', request.GET.get('key'))
+
+        arr = self._get_post_data(request)
+        if not arr:
             return Response({"error": "Invalid JSON in arr"})
+
         sid = arr.get('sid')
-        rp = arr.get('rp')  #User
-        total_rp = arr.get('total_rp')  #User
+        user = User.objects.get_or_none(steamID=sid)
+        if not user:
+            return Response({"status": "fail"}, status=status.HTTP_400_BAD_REQUEST)
 
-        player_exp = arr.get('expa') #UserProfile
-        level = arr.get('player_level') #UserProfile
-        skill_points = arr.get('point') #UserProfile
+        self._update_user_data(user, arr)
+        self._update_user_profile_data(user, arr)
+        self._update_user_statistic_data(user, arr)
 
-        rating = arr.get('rating') #UserStatistic
-        damage_deal = arr.get('damage_deal') #UserStatistic +
-        damage_take = arr.get('damage_take') #UserStatistic +
-        creeps = arr.get('creeps_kill') #UserStatistic +
-        bosses = arr.get('boss') #UserStatistic +
-        golden_creeps = arr.get('golden') #UserStatistic +
-        min_time = arr.get('time_min') #UserStatistic +
-        win_games = arr.get('win') #UserStatistic +
-        difficulty = arr.get('difficulty') #UserStatistic +
+        return Response({"status": "OK"})
 
-        user = User.objects.get(steamID=sid)   
-        user_profile = UserProfile.objects.filter(user__steamID=sid).first()
-        user_statistic = UserStatistic.objects.filter(user__steamID=sid).first()
-        if user:
-            user.rp = rp
-            user.total_rp = user.total_rp + total_rp
-            user.save()
 
-            user_profile.player_exp = player_exp
-            user_profile.level = level
-            user_profile.skill_points = skill_points
-            user_profile.difficulty = difficulty
-            user_profile.save()
+def _get_post_data(self, request):
+    try:
+        return json.loads(request.POST.get('arr'))
+    except (json.JSONDecodeError, TypeError):
+        return None
 
-            user_statistic.rating = rating
-            user_statistic.damage_deal = user_statistic.damage_deal + damage_deal
-            user_statistic.damage_take = user_statistic.damage_take + damage_take
-            user_statistic.creeps = user_statistic.creeps + creeps
-            user_statistic.bosses = user_statistic.bosses + bosses
-            user_statistic.golden_creeps = user_statistic.golden_creeps + golden_creeps
-            user_statistic.min_time =  user_statistic.min_time + min_time
-            user_statistic.win_games = user_statistic.win_games + win_games
-            user_statistic.save()
-            return Response({"status": "OK"})     
-        return Response({"status": "fail"})     
+def _update_user_data(self, user, data):
+    user.rp = data.get('rp')
+    user.total_rp += data.get('total_rp', 0)
+    user.save()
+
+def _update_user_profile_data(self, user, data):
+    user_profile = UserProfile.objects.filter(user=user).first()
+    user_profile_attrs = {
+        "player_exp": data.get('expa'),
+        "level": data.get('player_level'),
+        "skill_points": data.get('point'),
+        "difficulty": data.get('difficulty')
+    }
+    for attr, value in user_profile_attrs.items():
+        setattr(user_profile, attr, value)
+    user_profile.save()
+
+def _update_user_statistic_data(self, user, data):
+    user_statistic = UserStatistic.objects.filter(user=user).first()
+    update_fields = {
+        "rating": data.get('rating'),
+        "damage_deal": user_statistic.damage_deal + data.get('damage_deal', 0),
+        "damage_take": user_statistic.damage_take + data.get('damage_take', 0),
+        "creeps": user_statistic.creeps + data.get('creeps_kill', 0),
+        "bosses": user_statistic.bosses + data.get('boss', 0),
+        "golden_creeps": user_statistic.golden_creeps + data.get('golden', 0),
+        "min_time": user_statistic.min_time + data.get('time_min', 0),
+        "win_games": user_statistic.win_games + data.get('win', 0),
+    }
+    for field, value in update_fields.items():
+        setattr(user_statistic, field, value)
+    user_statistic.save()
 
 
 # /////////////////////////////////////////// GET and POST GAME RATING ////////////////////////////////////////////
